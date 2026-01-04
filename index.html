@@ -1,0 +1,521 @@
+<html lang="zh-CN"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>减肥记录助手</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- 首页 -->
+        <div id="home-page" class="page active">
+            <header class="header">
+                <h1>Herbert Weight Management V1</h1>
+                <div class="header-actions">
+                    <button id="add-weight-btn" class="btn-icon">
+                        <i class="fas fa-plus-circle"></i>
+                    </button>
+                </div>
+            </header>
+
+            <main class="main-content">
+                <!-- 体重卡片 -->
+                <div class="card weight-card">
+                    <div class="card-header">
+                        <h2>体重</h2>
+                        <span class="date">2023-07-21</span>
+                    </div>
+                    <div class="weight-display">
+                        <span class="current-weight">65.0</span>
+                        <span class="weight-unit">kg</span>
+                    </div>
+                    <div class="weight-change">
+                        <span class="change-value">-0.5</span>
+                        <span class="change-label">较昨日</span>
+                    </div>
+                    <div class="weight-trend">
+                        <canvas id="weight-trend-chart" height="60"></canvas>
+                    </div>
+                </div>
+
+                <!-- 数据概览 -->
+                <div class="stats-grid">
+                    <!-- 卡路里摄入 -->
+                    <div class="card stat-card">
+                        <div class="stat-icon food-icon">
+                            <i class="fas fa-utensils"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3>卡路里摄入</h3>
+                            <div class="stat-value">
+                                <span class="current-value">1800</span>
+                                <span class="unit">kcal</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress" style="width: 60%;"></div>
+                            </div>
+                            <div class="stat-detail">
+                                <span>目标: 2000 kcal</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 运动消耗 -->
+                    <div class="card stat-card">
+                        <div class="stat-icon exercise-icon">
+                            <i class="fas fa-running"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3>运动消耗</h3>
+                            <div class="stat-value">
+                                <span class="current-value">800</span>
+                                <span class="unit">kcal</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress" style="width: 80%;"></div>
+                            </div>
+                            <div class="stat-detail">
+                                <span>目标: 500 kcal</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 快捷记录按钮 -->
+                <div class="quick-actions">
+                    <button id="add-food-btn" class="action-btn food-btn">
+                        <i class="fas fa-utensils"></i>
+                        <span>记录饮食</span>
+                    </button>
+                    <button id="add-exercise-btn" class="action-btn exercise-btn">
+                        <i class="fas fa-running"></i>
+                        <span>记录运动</span>
+                    </button>
+                </div>
+
+                <!-- 今日记录列表 -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2>今日记录</h2>
+                        <a href="#records-page" class="view-all">查看全部</a>
+                    </div>
+                    <div class="records-list" id="today-records">
+                        <!-- 记录项将通过JS动态生成 -->
+                    </div>
+                </div>
+            </main>
+
+            <!-- 底部导航 -->
+            <nav class="bottom-nav">
+                <a href="#home-page" class="nav-item active">
+                    <i class="fas fa-home"></i>
+                    <span>首页</span>
+                </a>
+                <a href="#records-page" class="nav-item">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span>记录</span>
+                </a>
+                <a href="#stats-page" class="nav-item">
+                    <i class="fas fa-chart-line"></i>
+                    <span>统计</span>
+                </a>
+                <a href="#settings-page" class="nav-item">
+                    <i class="fas fa-cog"></i>
+                    <span>设置</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- 记录页 -->
+        <div id="records-page" class="page">
+            <header class="header">
+                <h1>记录管理</h1>
+            </header>
+
+            <div class="records-tabs">
+                <button class="tab-btn active" data-tab="food">饮食记录</button>
+                <button class="tab-btn" data-tab="exercise">运动记录</button>
+            </div>
+
+            <div class="tab-content active" id="food-tab">
+                <div class="records-list" id="food-records">
+                    <!-- 饮食记录将通过JS动态生成 -->
+                </div>
+            </div>
+
+            <div class="tab-content" id="exercise-tab">
+                <div class="records-list" id="exercise-records">
+                    <!-- 运动记录将通过JS动态生成 -->
+                </div>
+            </div>
+
+            <nav class="bottom-nav">
+                <a href="#home-page" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    <span>首页</span>
+                </a>
+                <a href="#records-page" class="nav-item active">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span>记录</span>
+                </a>
+                <a href="#stats-page" class="nav-item">
+                    <i class="fas fa-chart-line"></i>
+                    <span>统计</span>
+                </a>
+                <a href="#settings-page" class="nav-item">
+                    <i class="fas fa-cog"></i>
+                    <span>设置</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- 统计页 -->
+        <div id="stats-page" class="page">
+            <header class="header">
+                <h1>数据统计</h1>
+            </header>
+
+            <div class="time-filter">
+                <button class="filter-btn active" data-period="week">周</button>
+                <button class="filter-btn" data-period="month">月</button>
+                <button class="filter-btn" data-period="year">年</button>
+            </div>
+
+            <main class="main-content">
+                <!-- 体重变化图表 -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2>体重变化</h2>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="weight-chart"></canvas>
+                    </div>
+                </div>
+
+                <!-- 卡路里对比图表 -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2>卡路里摄入与目标</h2>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="calories-chart"></canvas>
+                    </div>
+                </div>
+
+                <!-- 饮食运动汇总 -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2>饮食与运动汇总</h2>
+                    </div>
+                    <div class="summary-grid">
+                        <div class="summary-item">
+                            <h3>总摄入卡路里</h3>
+                            <span class="summary-value">12,600</span>
+                            <span class="summary-unit">kcal</span>
+                        </div>
+                        <div class="summary-item">
+                            <h3>总消耗卡路里</h3>
+                            <span class="summary-value">5,600</span>
+                            <span class="summary-unit">kcal</span>
+                        </div>
+                        <div class="summary-item">
+                            <h3>饮食记录次数</h3>
+                            <span class="summary-value">21</span>
+                            <span class="summary-unit">次</span>
+                        </div>
+                        <div class="summary-item">
+                            <h3>运动记录次数</h3>
+                            <span class="summary-value">14</span>
+                            <span class="summary-unit">次</span>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <nav class="bottom-nav">
+                <a href="#home-page" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    <span>首页</span>
+                </a>
+                <a href="#records-page" class="nav-item">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span>记录</span>
+                </a>
+                <a href="#stats-page" class="nav-item active">
+                    <i class="fas fa-chart-line"></i>
+                    <span>统计</span>
+                </a>
+                <a href="#settings-page" class="nav-item">
+                    <i class="fas fa-cog"></i>
+                    <span>设置</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- 设置页 -->
+        <div id="settings-page" class="page">
+            <header class="header">
+                <h1>个人设置</h1>
+            </header>
+
+            <main class="main-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>个人信息</h2>
+                    </div>
+                    <form id="personal-info-form" class="settings-form">
+                        <div class="form-group">
+                            <label for="height">身高 (cm)</label>
+                            <input type="number" id="height" min="100" max="250" value="170">
+                        </div>
+                        <div class="form-group">
+                            <label for="initial-weight">初始体重 (kg)</label>
+                            <input type="number" id="initial-weight" min="30" max="300" step="0.1" value="70">
+                        </div>
+                        <div class="form-group">
+                            <label for="target-weight">目标体重 (kg)</label>
+                            <input type="number" id="target-weight" min="30" max="300" step="0.1" value="60">
+                        </div>
+                        <div class="form-group">
+                            <label for="age">年龄</label>
+                            <input type="number" id="age" min="1" max="150" value="25">
+                        </div>
+                        <div class="form-group">
+                            <label for="gender">性别</label>
+                            <select id="gender">
+                                <option value="male">男</option>
+                                <option value="female">女</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn-primary">保存</button>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2>目标设置</h2>
+                    </div>
+                    <form id="goals-form" class="settings-form">
+                        <div class="form-group">
+                            <label for="daily-calories">每日卡路里目标</label>
+                            <input type="number" id="daily-calories" min="500" max="5000" value="2000">
+                        </div>
+                        <div class="form-group">
+                            <label for="weekly-weight-loss">每周减重目标 (kg)</label>
+                            <input type="number" id="weekly-weight-loss" min="0.1" max="2" step="0.1" value="0.5">
+                        </div>
+                        <button type="submit" class="btn-primary">保存</button>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2>数据管理</h2>
+                    </div>
+                    <div class="data-management">
+                        <button id="export-data-btn" class="btn-secondary">
+                            <i class="fas fa-download"></i>
+                            <span>导出数据</span>
+                        </button>
+                        <button id="clear-data-btn" class="btn-danger">
+                            <i class="fas fa-trash"></i>
+                            <span>清除所有数据</span>
+                        </button>
+                    </div>
+                </div>
+            </main>
+
+            <nav class="bottom-nav">
+                <a href="#home-page" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    <span>首页</span>
+                </a>
+                <a href="#records-page" class="nav-item">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span>记录</span>
+                </a>
+                <a href="#stats-page" class="nav-item">
+                    <i class="fas fa-chart-line"></i>
+                    <span>统计</span>
+                </a>
+                <a href="#settings-page" class="nav-item active">
+                    <i class="fas fa-cog"></i>
+                    <span>设置</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- 记录饮食弹窗 -->
+        <div id="food-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>记录饮食</h2>
+                    <button class="close-btn">×</button>
+                </div>
+                <form id="food-form" class="record-form">
+                    <div class="form-group">
+                        <label>拍照上传</label>
+                        <div class="image-upload">
+                            <div class="upload-placeholder">
+                                <i class="fas fa-camera"></i>
+                                <span>点击上传照片</span>
+                            </div>
+                            <input type="file" id="food-image" accept="image/*" capture="camera">
+                            <div class="image-preview hidden">
+                                <img src="https://via.placeholder.com/150" alt="预览图">
+                                <button type="button" class="remove-image">×</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="food-name">食物名称</label>
+                        <input type="text" id="food-name" placeholder="例如：苹果、米饭">
+                    </div>
+                    <div class="form-group">
+                        <label for="food-calories">卡路里 (kcal)</label>
+                        <input type="number" id="food-calories" min="0" placeholder="自动识别或手动输入">
+                        <button type="button" id="recognize-calories" class="btn-secondary">
+                            <i class="fas fa-magic"></i>
+                            <span>识别卡路里</span>
+                        </button>
+                    </div>
+                    <div class="form-group">
+                        <label for="food-time">进食时间</label>
+                        <select id="food-time">
+                            <option value="breakfast">早餐</option>
+                            <option value="lunch">午餐</option>
+                            <option value="dinner">晚餐</option>
+                            <option value="snack">加餐</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="food-notes">备注</label>
+                        <textarea id="food-notes" placeholder="添加备注信息..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>语音记录</label>
+                        <button type="button" id="voice-record-btn" class="btn-secondary">
+                            <i class="fas fa-microphone"></i>
+                            <span>开始录音</span>
+                        </button>
+                        <div class="recording-indicator hidden">
+                            <div class="recording-wave"></div>
+                            <span class="recording-time">00:00</span>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary save-draft">保存草稿</button>
+                        <button type="submit" class="btn-primary">提交记录</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- 记录运动弹窗 -->
+        <div id="exercise-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>记录运动</h2>
+                    <button class="close-btn">×</button>
+                </div>
+                <form id="exercise-form" class="record-form">
+                    <div class="form-group">
+                        <label>拍照上传</label>
+                        <div class="image-upload">
+                            <div class="upload-placeholder">
+                                <i class="fas fa-camera"></i>
+                                <span>点击上传照片</span>
+                            </div>
+                            <input type="file" id="exercise-image" accept="image/*" capture="camera">
+                            <div class="image-preview hidden">
+                                <img src="https://via.placeholder.com/150" alt="预览图">
+                                <button type="button" class="remove-image">×</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="exercise-type">运动类型</label>
+                        <select id="exercise-type">
+                            <option value="running">跑步</option>
+                            <option value="walking">步行</option>
+                            <option value="cycling">骑行</option>
+                            <option value="swimming">游泳</option>
+                            <option value="gym">健身</option>
+                            <option value="other">其他</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="exercise-duration">运动时长 (分钟)</label>
+                        <input type="number" id="exercise-duration" min="1" max="480" value="30">
+                    </div>
+                    <div class="form-group">
+                        <label for="exercise-calories">消耗卡路里 (kcal)</label>
+                        <input type="number" id="exercise-calories" min="0" placeholder="自动计算或手动输入">
+                        <button type="button" id="calculate-calories" class="btn-secondary">
+                            <i class="fas fa-calculator"></i>
+                            <span>计算卡路里</span>
+                        </button>
+                    </div>
+                    <div class="form-group">
+                        <label for="exercise-notes">备注</label>
+                        <textarea id="exercise-notes" placeholder="添加备注信息..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>语音记录</label>
+                        <button type="button" id="exercise-voice-record-btn" class="btn-secondary">
+                            <i class="fas fa-microphone"></i>
+                            <span>开始录音</span>
+                        </button>
+                        <div class="recording-indicator hidden">
+                            <div class="recording-wave"></div>
+                            <span class="recording-time">00:00</span>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary save-draft">保存草稿</button>
+                        <button type="submit" class="btn-primary">提交记录</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- 记录体重弹窗 -->
+        <div id="weight-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>记录体重</h2>
+                    <button class="close-btn">×</button>
+                </div>
+                <form id="weight-form" class="record-form">
+                    <div class="form-group">
+                        <label for="weight-value">体重 (kg)</label>
+                        <input type="number" id="weight-value" min="30" max="300" step="0.1" required="">
+                    </div>
+                    <div class="form-group">
+                        <label for="weight-date">日期</label>
+                        <input type="date" id="weight-date" required="">
+                    </div>
+                    <div class="form-group">
+                        <label for="weight-notes">备注</label>
+                        <textarea id="weight-notes" placeholder="添加备注信息..."></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">提交记录</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- 提示弹窗 -->
+        <div id="toast" class="toast hidden">
+            <div class="toast-content">
+                <i class="fas fa-check-circle"></i>
+                <span id="toast-message">操作成功</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+
+</body></html>
